@@ -26,13 +26,27 @@
     <div id="editor"></div>
   </main>
 
+  <!-- 공유 링크 창 -->
+  <div class="cs-lightbox" id="shareModal">
+    <div class="share-box">
+      <button class="cs-lightbox-close" id="shareClose" aria-label="닫기">✕</button>
+      <h3 class="share-title">🔗 콜시트 공유 링크</h3>
+      <p class="share-desc">아래 링크를 복사해 카카오톡·문자 등으로 보내세요. 받은 분은 <b>보기 전용</b>으로 열람합니다.</p>
+      <textarea id="shareUrl" class="share-url" readonly></textarea>
+      <div class="share-actions">
+        <button id="shareCopy" class="btn btn--primary">📋 링크 복사</button>
+        <button id="shareNative" class="btn btn--violet">📤 앱으로 공유</button>
+        <a id="shareOpen" class="btn" target="_blank" rel="noopener">👁️ 열어보기</a>
+      </div>
+      <div class="share-note">※ 내용을 수정하면 <b>새 링크</b>가 만들어집니다. 수정한 뒤에는 다시 [콜시트 공유]로 갱신된 링크를 보내주세요.</div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <!-- 주소 검색 (Daum 우편번호, 무료) -->
   <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script src="js/lib/lz-string.min.js"></script>
-  <script src="js/lib/html2canvas.min.js"></script>
-  <script src="js/lib/jspdf.umd.min.js"></script>
   <script src="js/common.js"></script>
   <script src="js/editor.js"></script>
 </body>

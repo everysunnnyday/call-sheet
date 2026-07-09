@@ -313,15 +313,27 @@
 
   /* ---------- 미리보기 / 공유 ---------- */
   function openPreview() { saveNow(); window.open(buildShareUrl(data), "_blank"); }
+
+  var shareModal = document.getElementById("shareModal");
+  var shareUrlEl = document.getElementById("shareUrl");
   function shareLink() {
     saveNow();
     var url = buildShareUrl(data);
+    shareUrlEl.value = url;
+    document.getElementById("shareOpen").href = url;
+    shareModal.classList.add("show");
     if (url.length > 12000) toast("이미지가 많아 링크가 깁니다. 카톡에서 잘리면 인쇄(PDF)로 공유하세요.");
-    if (navigator.share) {
-      navigator.share({ title: data.projectTitle || "촬영 콜시트", text: "촬영 콜시트를 확인하세요.", url: url })
-        .then(function () {}, function () { copyText(url); });
-    } else { copyText(url); }
+    setTimeout(function () { shareUrlEl.focus(); shareUrlEl.select(); }, 50);
   }
+  function closeShare() { shareModal.classList.remove("show"); }
+  document.getElementById("shareClose").addEventListener("click", closeShare);
+  shareModal.addEventListener("click", function (e) { if (e.target === shareModal) closeShare(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeShare(); });
+  document.getElementById("shareCopy").addEventListener("click", function () { copyText(shareUrlEl.value); });
+  document.getElementById("shareNative").addEventListener("click", function () {
+    if (navigator.share) navigator.share({ title: data.projectTitle || "촬영 콜시트", text: "촬영 콜시트를 확인하세요.", url: shareUrlEl.value }).catch(function () {});
+    else { copyText(shareUrlEl.value); toast("이 브라우저는 앱 공유를 지원하지 않아 링크를 복사했습니다."); }
+  });
   function copyText(text) {
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { toast("공유 링크를 복사했습니다. 카톡 등에 붙여넣으세요."); }, function () { fallbackCopy(text); });
     else fallbackCopy(text);
