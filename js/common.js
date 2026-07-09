@@ -178,6 +178,12 @@ function formatDate(iso) {
   var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
   if (!m) return iso;
   var dt = new Date(+m[1], +m[2] - 1, +m[3]);
+  return m[1] + "년 " + (+m[2]) + "월 " + (+m[3]) + "일 (" + WEEK[dt.getDay()] + ")";
+}
+function formatDateNoYear(iso) {
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+  if (!m) return iso || "";
+  var dt = new Date(+m[1], +m[2] - 1, +m[3]);
   return (+m[2]) + "월 " + (+m[3]) + "일 (" + WEEK[dt.getDay()] + ")";
 }
 function shortDate(iso) {
@@ -190,7 +196,10 @@ function dateRange(days) {
   var ds = (days || []).map(function (d) { return d.date; }).filter(Boolean).sort();
   if (!ds.length) return "";
   if (ds.length === 1) return formatDate(ds[0]);
-  return formatDate(ds[0]) + " ~ " + formatDate(ds[ds.length - 1]);
+  var a = ds[0], b = ds[ds.length - 1];
+  // 같은 해면 뒤쪽 연도는 생략
+  var bStr = (a.slice(0, 4) === b.slice(0, 4)) ? formatDateNoYear(b) : formatDate(b);
+  return formatDate(a) + " ~ " + bStr;
 }
 /* 전화 → tel: (숫자만) */
 function telHref(phone) { return "tel:" + String(phone || "").replace(/[^0-9+]/g, ""); }
