@@ -266,17 +266,6 @@ function renderDay(day) {
       (locImgs ? '<div class="cs-img-grid">' + locImgs + '</div>' : '');
   }
 
-  /* 자료 */
-  var matsHtml = (day.materials || []).filter(function (m) { return m.dataUrl; }).map(function (m) {
-    var isImg = (m.type || "").indexOf("image") === 0;
-    var thumb = isImg
-      ? '<img class="cs-zoom cs-mat-thumb" src="' + m.dataUrl + '" alt="' + esc(m.name) + '">'
-      : '<span class="cs-mat-ico">📄</span>';
-    return '<div class="cs-mat">' + thumb +
-      '<span class="cs-mat-name">' + esc(m.name) + '</span>' +
-      '<a class="cs-mat-dl" href="' + m.dataUrl + '" download="' + esc(m.name) + '">⬇︎ 다운로드</a></div>';
-  }).join("");
-
   /* 접이식 섹션 헬퍼 */
   function acc(title, count, inner) {
     if (!inner) return "";
@@ -301,14 +290,13 @@ function renderDay(day) {
 
   return '' +
     (day.notes ? '<div class="cs-notes"><span class="cs-notes-tag">특이사항</span> ' + esc(day.notes).replace(/\n/g, "<br>") + '</div>' : '') +
-    '<div class="cs-accs">' +
+    '<div class="cs-group cs-group--info"><div class="cs-accs">' +
       acc("담당자", (day.managers || []).length, managersHtml) +
       acc("Key staff", (day.keyStaff || []).length, keyStaffHtml) +
       acc("콜 정보", (day.calls || []).length, callsHtml) +
       acc("로케이션 · 주차", "", locHtml) +
-      acc("자료 확인", (day.materials || []).length, matsHtml) +
-    '</div>' +
-    '<div class="cs-table-wrap"><table class="cs-table">' +
+    '</div></div>' +
+    '<div class="cs-group cs-group--tt"><div class="cs-table-wrap"><table class="cs-table">' +
       '<thead><tr>' +
         '<th class="cs-c-time">시간</th>' +
         '<th class="cs-c-dn">D/N</th>' +
@@ -317,5 +305,5 @@ function renderDay(day) {
         '<th class="cs-c-char">Character</th>' +
         '<th class="cs-c-cuts">#C</th>' +
         '<th class="cs-c-etc">ETC</th>' +
-      '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
+      '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div></div>';
 }
