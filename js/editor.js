@@ -440,6 +440,9 @@
   function closeHistory() { historyModal.classList.remove("show"); }
   function loadFromHistory(id, asCopy) {
     if (!store.enabled) { toast("히스토리 불러오기는 서버 연결이 필요합니다."); return; }
+    if (asCopy) {
+      if (!confirm("이 콜시트 내용을 복사해 새 콜시트로 시작할까요?\n(현재 작성 중인 내용은 사라집니다)")) return;
+    }
     toast("불러오는 중…");
     store.get(id).then(function (d) {
       if (!d) { toast("콜시트를 찾을 수 없습니다(삭제됨)."); return; }
