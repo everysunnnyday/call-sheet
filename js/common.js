@@ -7,6 +7,21 @@
  * - 한 회차(하루) 읽기 전용 렌더 (뷰어·에디터 미리보기 공용)
  * =======================================================================*/
 
+/* ---------- 최초 1회 초기화(배포 리셋) ----------
+ * 새 배포를 처음 열 때, 기기에 남아있던 이전 샘플/작업 데이터를 깨끗이 비운다.
+ * (다른 사람이 설치해도 항상 빈 상태로 시작하도록)
+ * RESET_TAG를 바꾸면 그때 다시 1회 초기화된다. */
+(function () {
+  try {
+    var RESET_TAG = "clean-2026-07-09";
+    if (localStorage.getItem("callsheet:resetv") !== RESET_TAG) {
+      ["callsheet:last", "callsheet:id", "callsheet:draft", "callsheet:history",
+       "callsheet:clip:info", "callsheet:clip:tt"].forEach(function (k) { localStorage.removeItem(k); });
+      localStorage.setItem("callsheet:resetv", RESET_TAG);
+    }
+  } catch (e) {}
+})();
+
 /* ---------- 데이터 구조 ---------- */
 function emptyData() {
   return {
