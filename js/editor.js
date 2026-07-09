@@ -243,8 +243,7 @@
     var addrInput = bare(loc.address, function (v) { loc.address = v; }, "주소"); addrInput.style.flex = "1";
     var searchBtn = el("button", "btn btn--sm", "🔍 주소검색");
     searchBtn.addEventListener("click", function () {
-      if (typeof daum === "undefined" || !daum.Postcode) { toast("주소검색을 불러오지 못했습니다(인터넷 확인). 직접 입력하세요."); return; }
-      new daum.Postcode({ oncomplete: function (d2) { loc.address = d2.roadAddress || d2.address; addrInput.value = loc.address; save(); } }).open();
+      openPostcode(function (addr) { loc.address = addr; addrInput.value = addr; save(); });
     });
     addrRow.appendChild(addrInput); addrRow.appendChild(searchBtn);
     addrWrap.appendChild(addrRow);
@@ -338,6 +337,23 @@
   document.getElementById("previewClose").addEventListener("click", closePreview);
   previewModal.addEventListener("click", function (e) { if (e.target === previewModal) closePreview(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closePreview(); });
+
+  /* ---------- 주소 검색 (앱 안 임베드) ---------- */
+  var postcodeModal = document.getElementById("postcodeModal");
+  var postcodeBox = document.getElementById("postcodeBox");
+  function openPostcode(onPick) {
+    if (typeof daum === "undefined" || !daum.Postcode) { toast("주소검색을 불러오지 못했습니다(인터넷 확인). 직접 입력하세요."); return; }
+    postcodeBox.innerHTML = "";
+    postcodeModal.classList.add("show");
+    new daum.Postcode({
+      width: "100%", height: "100%",
+      oncomplete: function (d2) { onPick(d2.roadAddress || d2.jibunAddress || d2.address); closePostcode(); }
+    }).embed(postcodeBox);
+  }
+  function closePostcode() { postcodeModal.classList.remove("show"); postcodeBox.innerHTML = ""; }
+  document.getElementById("postcodeClose").addEventListener("click", closePostcode);
+  postcodeModal.addEventListener("click", function (e) { if (e.target === postcodeModal) closePostcode(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closePostcode(); });
 
   var shareModal = document.getElementById("shareModal");
   var shareUrlEl = document.getElementById("shareUrl");
