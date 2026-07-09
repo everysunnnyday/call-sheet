@@ -11,9 +11,13 @@
   var CLIP_INFO = "callsheet:clip:info";
   var CLIP_TT = "callsheet:clip:tt";
 
+  var ID_KEY = "callsheet:id";
   var editorEl = document.getElementById("editor");
   var toastEl = document.getElementById("toast");
   var data = loadInitial();
+  var sheetId = null;
+  try { sheetId = localStorage.getItem(ID_KEY) || null; } catch (e) {}
+  var store = window.CS_STORE || { enabled: false };
 
   function loadInitial() {
     if (location.hash.indexOf("edit") !== -1) {
@@ -24,8 +28,18 @@
   }
 
   var saveTimer = null;
-  function save() { clearTimeout(saveTimer); saveTimer = setTimeout(function () { try { localStorage.setItem(STORE, JSON.stringify(data)); } catch (e) {} }, 200); }
-  function saveNow() { try { localStorage.setItem(STORE, JSON.stringify(data)); return true; } catch (e) { return false; } }
+  function save() { clearTimeout(saveTimer); saveTimer = setTimeout(function () { try { localStorage.setItem(STORE, JSON.stringify(data)); } catch (e) {} pushRemote(); }, 200); }
+  function saveNow() { try { localStorage.setItem(STORE, JSON.stringify(data)); } catch (e) {} pushRemote(); return true; }
+
+  /* 이미 공유된(=id 있는) 콜시트면 편집 내용을 Firestore에 실시간 반영 (디바운스) */
+  var pushTimer = null;
+  function pushRemote() {
+    if (!store.enabled || !sheetId) return;
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(function () {
+      store.save(data, sheetId).catch(function (e) { console.warn("실시간 반영 실패:", e); });
+    }, 1200);
+  }
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
 
   var tt = null;
@@ -316,13 +330,32 @@
 
   var shareModal = document.getElementById("shareModal");
   var shareUrlEl = document.getElementById("shareUrl");
-  function shareLink() {
-    saveNow();
-    var url = buildShareUrl(data);
+  function showShare(url) {
     shareUrlEl.value = url;
     shareModal.classList.add("show");
-    if (url.length > 12000) toast("이미지가 많아 링크가 깁니다. 카톡에서 잘리면 인쇄(PDF)로 공유하세요.");
     setTimeout(function () { shareUrlEl.focus(); shareUrlEl.select(); }, 50);
+  }
+  function shareLink() {
+    saveNow();
+    if (store.enabled) {
+      // Firebase: 저장 → 짧은 링크 + 실시간 반영
+      shareUrlEl.value = "링크 생성 중…";
+      shareModal.classList.add("show");
+      store.save(data, sheetId).then(function (id) {
+        sheetId = id;
+        try { localStorage.setItem(ID_KEY, id); } catch (e) {}
+        showShare(buildIdUrl(id));
+      }).catch(function (e) {
+        console.error(e);
+        // 실패 시 링크 방식으로 폴백
+        showShare(buildShareUrl(data));
+        toast("서버 저장 실패 — 링크 방식으로 공유합니다.");
+      });
+    } else {
+      var url = buildShareUrl(data);
+      if (url.length > 12000) toast("이미지가 많아 링크가 깁니다. 카톡에서 잘리면 인쇄(PDF)로 공유하세요.");
+      showShare(url);
+    }
   }
   function closeShare() { shareModal.classList.remove("show"); }
   document.getElementById("shareClose").addEventListener("click", closeShare);
@@ -344,8 +377,9 @@
     ta.remove();
   }
 
-  document.getElementById("btnSample").addEventListener("click", function () { if (confirm("현재 내용을 샘플로 덮어쓸까요?")) { data = sampleData(); save(); rerender(); } });
-  document.getElementById("btnClear").addEventListener("click", function () { if (confirm("모든 내용을 비우고 새로 작성할까요?")) { data = emptyData(); save(); rerender(); } });
+  function newSheet() { sheetId = null; try { localStorage.removeItem(ID_KEY); } catch (e) {} }
+  document.getElementById("btnSample").addEventListener("click", function () { if (confirm("현재 내용을 샘플로 덮어쓸까요? (새 콜시트로 시작)")) { newSheet(); data = sampleData(); saveNow(); rerender(); } });
+  document.getElementById("btnClear").addEventListener("click", function () { if (confirm("모든 내용을 비우고 새로 작성할까요? (새 콜시트로 시작)")) { newSheet(); data = emptyData(); saveNow(); rerender(); } });
 
   renderForm();
 })();

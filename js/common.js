@@ -141,10 +141,9 @@ function migrate(d) {
   });
   return d;
 }
-function buildShareUrl(data) {
-  var base = location.href.replace(/\/[^\/]*(#.*)?$/, "/");
-  return base + "view.html#d=" + encodeData(data);
-}
+function baseUrl() { return location.href.replace(/\/[^\/]*(\?[^#]*)?(#.*)?$/, "/"); }
+function buildShareUrl(data) { return baseUrl() + "view.html#d=" + encodeData(data); }
+function buildIdUrl(id) { return baseUrl() + "view.html?id=" + id; }
 
 /* ---------- 유틸 ---------- */
 function escapeHtml(s) {
