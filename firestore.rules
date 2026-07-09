@@ -1,0 +1,15 @@
+rules_version = '2';
+// 촬영 콜시트 Firestore 보안 규칙
+// - 링크(문서 id)를 아는 사람은 누구나 열람 가능
+// - 콜시트 생성/수정은 로그인(익명 포함) 사용자만, 수정은 만든 사람만
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /callsheets/{id} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null
+        && (resource.data.ownerUid == null || resource.data.ownerUid == request.auth.uid);
+      allow delete: if request.auth != null && resource.data.ownerUid == request.auth.uid;
+    }
+  }
+}
