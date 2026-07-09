@@ -119,12 +119,12 @@
     infoG.appendChild(locationSection(day));
     // 복사/붙여넣기 (우측 하단)
     var infoTools = el("div", "ed-group-tools");
-    var copyInfo = el("button", "btn btn--sm", "📋 정보 복사");
+    var copyInfo = el("button", "btn btn--sm", "정보 복사");
     copyInfo.addEventListener("click", function () {
       var pack = { managers: day.managers, keyStaff: day.keyStaff, calls: day.calls, location: day.location, notes: day.notes };
       try { localStorage.setItem(CLIP_INFO, JSON.stringify(pack)); toast((di + 1) + "회차 정보를 복사했습니다."); } catch (e) { toast("복사 실패"); }
     });
-    var pasteInfo = el("button", "btn btn--sm", "📥 정보 붙여넣기");
+    var pasteInfo = el("button", "btn btn--sm", "정보 붙여넣기");
     pasteInfo.addEventListener("click", function () {
       var raw = localStorage.getItem(CLIP_INFO); if (!raw) { toast("복사된 정보가 없습니다."); return; }
       if (!confirm("이 회차 정보(담당자·콜·로케이션·특이사항)를 덮어쓸까요?")) return;
@@ -145,9 +145,9 @@
     ttG.appendChild(el("div", "ed-group-title", "타임테이블"));
     ttG.appendChild(timetable(day));
     var ttTools = el("div", "ed-group-tools");
-    var copyTt = el("button", "btn btn--sm", "📋 표 복사");
+    var copyTt = el("button", "btn btn--sm", "표 복사");
     copyTt.addEventListener("click", function () { try { localStorage.setItem(CLIP_TT, JSON.stringify(day.rows)); toast((di + 1) + "회차 표를 복사했습니다."); } catch (e) { toast("복사 실패"); } });
-    var pasteTt = el("button", "btn btn--sm", "📥 표 붙여넣기");
+    var pasteTt = el("button", "btn btn--sm", "표 붙여넣기");
     pasteTt.addEventListener("click", function () {
       var raw = localStorage.getItem(CLIP_TT); if (!raw) { toast("복사된 표가 없습니다."); return; }
       if (!confirm("이 회차 타임테이블을 덮어쓸까요?")) return;
@@ -276,7 +276,7 @@
     var table = el("table", "ed-tt-table");
     table.innerHTML = "<thead><tr>" +
       "<th class='ed-w-time'>시간</th><th class='ed-w-dn'>D/N</th><th class='ed-w-ie'>I/E</th>" +
-      "<th>Set / Location</th><th class='ed-w-char'>Character</th><th class='ed-w-cuts'>#C</th><th>ETC</th>" +
+      "<th>Set / Location</th><th class='ed-w-char'>Character</th><th class='ed-w-cuts'>#C</th><th class='ed-w-etc'>ETC</th>" +
       "<th class='ed-w-hl'>중요</th><th class='ed-w-del'></th></tr></thead>";
     var tbody = el("tbody");
     (day.rows || []).forEach(function (r, ri) {
@@ -320,7 +320,6 @@
     saveNow();
     var url = buildShareUrl(data);
     shareUrlEl.value = url;
-    document.getElementById("shareOpen").href = url;
     shareModal.classList.add("show");
     if (url.length > 12000) toast("이미지가 많아 링크가 깁니다. 카톡에서 잘리면 인쇄(PDF)로 공유하세요.");
     setTimeout(function () { shareUrlEl.focus(); shareUrlEl.select(); }, 50);

@@ -295,13 +295,19 @@ a { color: var(--violet); }
 
 /* 에디터 타임테이블 */
 .ed-tt-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
-.ed-tt-table { width: 100%; border-collapse: collapse; min-width: 760px; }
-.ed-tt-table th { font-size: 11px; color: var(--ink-soft); text-align: left; padding: 6px; font-weight: 700; background: #f6f7f9; white-space: nowrap; }
-.ed-tt-table td { padding: 3px 4px; border-top: 1px solid var(--line); }
-.ed-tt-table input[type=text] { padding: 7px 8px; font-size: 13px; }
-.ed-w-time { width: 120px; } .ed-w-dn { width: 46px; } .ed-w-ie { width: 46px; }
-.ed-w-char { width: 120px; } .ed-w-cuts { width: 46px; } .ed-w-hl { width: 40px; text-align: center; }
-.ed-w-del { width: 34px; }
+.ed-tt-table { width: 100%; border-collapse: collapse; min-width: 0; table-layout: fixed; }
+.ed-tt-table th { font-size: 11px; color: var(--ink-soft); text-align: left; padding: 6px 3px; font-weight: 700; background: #f6f7f9; white-space: nowrap; }
+.ed-tt-table td { padding: 3px 3px; border-top: 1px solid var(--line); }
+.ed-tt-table input[type=text] { padding: 7px 5px; font-size: 13px; width: 100%; min-width: 0; box-sizing: border-box; }
+/* Set/Location(무지정)이 남는 폭을 가장 넓게 차지 */
+.ed-w-time { width: 84px; }   /* "10:00~12:00" 기준 */
+.ed-w-dn { width: 36px; } .ed-w-ie { width: 36px; }
+.ed-w-char { width: 90px; }
+.ed-w-cuts { width: 38px; }   /* 두 자리 컷 수 */
+.ed-w-etc { width: 96px; }
+.ed-w-hl { width: 38px; text-align: center; }
+.ed-w-del { width: 38px; text-align: center; }
+.ed-w-del .btn { padding: 6px 7px; }
 .ed-hl-check { width: 20px; height: 20px; accent-color: var(--violet); }
 
 .ed-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
