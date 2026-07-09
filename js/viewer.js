@@ -97,9 +97,31 @@
   lightbox.addEventListener("click", function (e) { if (e.target === lightbox) closeLightbox(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLightbox(); });
 
-  /* 인쇄 */
+  /* 인쇄 — 전체 회차 출력 (회차마다 새 페이지) */
+  function buildPrintAll() {
+    if (!data) return "";
+    var orgs = '<div class="cs-orgs">' +
+      '<span class="cs-client">' + esc(data.client || "고객사") + '</span>' +
+      '<span class="cs-sep">×</span>' +
+      '<span class="cs-prod">' + esc(data.production || "제작사") + '</span></div>';
+    return (data.days || []).map(function (day, i) {
+      return '<section class="print-day">' +
+        '<div class="cs-topbar">' + orgs +
+          '<div class="cs-proj">' + esc(data.projectTitle || "촬영명") + '</div>' +
+          '<div class="cs-range">' + esc(dateRange(data.days)) + '</div></div>' +
+        '<div class="cs-daybody"><div class="cs-day-head">' +
+          (i + 1) + '회차 · <span class="cs-hl-date">' + esc(formatDate(day.date) || "날짜 미정") + '</span></div>' +
+          renderDay(day) + '</div></section>';
+    }).join("");
+  }
+  function preparePrint() {
+    var pa = document.getElementById("printArea");
+    pa.innerHTML = buildPrintAll();
+    Array.prototype.forEach.call(pa.querySelectorAll("details"), function (d) { d.open = true; });
+  }
+  window.__preparePrint = preparePrint; // 테스트용
   document.getElementById("btnPrint").addEventListener("click", function () {
-    Array.prototype.forEach.call(document.querySelectorAll("#sheet details"), function (d) { d.open = true; });
+    preparePrint();
     window.print();
   });
 

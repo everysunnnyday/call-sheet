@@ -237,10 +237,17 @@ a { color: var(--violet); }
 /* =========================================================================
  * 인쇄 (A4) — 접힌 정보도 모두 펼쳐서 출력
  * =======================================================================*/
+#printArea { display: none; }
+
 @media print {
   @page { size: A4; margin: 12mm; }
   html, body { background: #fff; }
-  .appbar, .no-print, .editor-panel, .cs-tabs { display: none !important; }
+  .appbar, .no-print, .editor-panel, .cs-tabs, #mount { display: none !important; }
+  /* 인쇄 시엔 전체 회차를 담은 #printArea만 출력 */
+  #printArea { display: block !important; }
+  .print-day { break-before: page; page-break-before: always; }
+  .print-day:first-child { break-before: auto; page-break-before: auto; }
+  .print-day .cs-daybody { box-shadow: none; border-radius: 0; padding: 0; margin-top: 8px; }
   .page { max-width: none; padding: 0; }
   .cs-topbar { background: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 0; }
   .cs-daybody { box-shadow: none; border-radius: 0; padding: 0; }
@@ -250,9 +257,9 @@ a { color: var(--violet); }
   .cs-table tbody tr.cs-hl td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .cs-day-head .cs-hl-date { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   details:not([open]) > .cs-acc-body { display: block !important; }
-  /* 영역 배경은 인쇄에서 흰색, 타임테이블은 새 페이지부터 */
-  .cs-group { background: #fff !important; padding: 0; margin: 0; }
-  .cs-group--tt { break-before: page; page-break-before: always; }
+  /* 영역 배경은 인쇄에서 흰색 */
+  .cs-group { background: #fff !important; padding: 0; margin: 8px 0 0; }
+  .cs-table, .cs-acc { break-inside: avoid; }
   a { color: #000; text-decoration: none; }
 }
 
