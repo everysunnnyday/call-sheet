@@ -47,6 +47,14 @@
       });
     },
 
+    /* 단건 조회 → Promise<data|null> */
+    get: function (id) {
+      if (!this.enabled) return Promise.reject(new Error("store disabled"));
+      return db.collection("callsheets").doc(id).get().then(function (doc) {
+        return (doc.exists && doc.data() && doc.data().data) ? migrate(doc.data().data) : null;
+      });
+    },
+
     /* 실시간 구독 → 변경 때마다 cb(data) 호출. 해제 함수 반환 */
     subscribe: function (id, cb, errcb) {
       if (!this.enabled) { if (errcb) errcb(new Error("store disabled")); return function () {}; }

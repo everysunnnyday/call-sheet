@@ -12,6 +12,7 @@
   var CLIP_TT = "callsheet:clip:tt";
 
   var ID_KEY = "callsheet:id";
+  var HISTORY_KEY = "callsheet:history";
   var editorEl = document.getElementById("editor");
   var toastEl = document.getElementById("toast");
   var data = loadInitial();
@@ -24,7 +25,7 @@
       try { var dft = localStorage.getItem(DRAFT); if (dft) { localStorage.removeItem(DRAFT); return migrate(JSON.parse(dft)); } } catch (e) {}
     }
     try { var last = localStorage.getItem(STORE); if (last) return migrate(JSON.parse(last)); } catch (e) {}
-    return sampleData();
+    return emptyData();
   }
 
   var saveTimer = null;
@@ -89,11 +90,11 @@
 
     /* 하단 액션바 */
     var bar = el("div", "ed-bottombar");
-    var bPrev = el("button", "btn btn--dark", "👁️ 미리보기");
+    var bPrev = el("button", "btn btn--dark", "미리보기");
     bPrev.addEventListener("click", openPreview);
-    var bSave = el("button", "btn", "💾 저장");
+    var bSave = el("button", "btn", "저장");
     bSave.addEventListener("click", function () { toast(saveNow() ? "저장되었습니다." : "저장 실패(용량 초과)"); });
-    var bShare = el("button", "btn btn--primary", "🔗 콜시트 공유");
+    var bShare = el("button", "btn btn--primary", "콜시트 공유");
     bShare.addEventListener("click", shareLink);
     bar.appendChild(bPrev); bar.appendChild(bSave); bar.appendChild(bShare);
     editorEl.appendChild(bar);
@@ -344,6 +345,7 @@
       store.save(data, sheetId).then(function (id) {
         sheetId = id;
         try { localStorage.setItem(ID_KEY, id); } catch (e) {}
+        upsertHistory(id, data);
         showShare(buildIdUrl(id));
       }).catch(function (e) {
         console.error(e);
@@ -362,10 +364,6 @@
   shareModal.addEventListener("click", function (e) { if (e.target === shareModal) closeShare(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeShare(); });
   document.getElementById("shareCopy").addEventListener("click", function () { copyText(shareUrlEl.value); });
-  document.getElementById("shareNative").addEventListener("click", function () {
-    if (navigator.share) navigator.share({ title: data.projectTitle || "촬영 콜시트", text: "촬영 콜시트를 확인하세요.", url: shareUrlEl.value }).catch(function () {});
-    else { copyText(shareUrlEl.value); toast("이 브라우저는 앱 공유를 지원하지 않아 링크를 복사했습니다."); }
-  });
   function copyText(text) {
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { toast("공유 링크를 복사했습니다. 카톡 등에 붙여넣으세요."); }, function () { fallbackCopy(text); });
     else fallbackCopy(text);
@@ -378,8 +376,59 @@
   }
 
   function newSheet() { sheetId = null; try { localStorage.removeItem(ID_KEY); } catch (e) {} }
-  document.getElementById("btnSample").addEventListener("click", function () { if (confirm("현재 내용을 샘플로 덮어쓸까요? (새 콜시트로 시작)")) { newSheet(); data = sampleData(); saveNow(); rerender(); } });
-  document.getElementById("btnClear").addEventListener("click", function () { if (confirm("모든 내용을 비우고 새로 작성할까요? (새 콜시트로 시작)")) { newSheet(); data = emptyData(); saveNow(); rerender(); } });
+
+  /* ---------- 히스토리 ---------- */
+  function nowMs() { return (new Date()).getTime(); }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function fmtStamp(ms) { if (!ms) return "-"; var dt = new Date(ms); return dt.getFullYear() + "." + pad(dt.getMonth() + 1) + "." + pad(dt.getDate()) + " " + pad(dt.getHours()) + ":" + pad(dt.getMinutes()); }
+  function loadHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]"); } catch (e) { return []; } }
+  function saveHistory(arr) { try { localStorage.setItem(HISTORY_KEY, JSON.stringify(arr.slice(0, 50))); } catch (e) {} }
+  function upsertHistory(id, d) {
+    var arr = loadHistory().filter(function (h) { return h.id !== id; });
+    arr.unshift({ id: id, title: d.projectTitle || "(제목 없음)", shootDate: (d.days && d.days[0] && d.days[0].date) || "", updatedAt: nowMs() });
+    saveHistory(arr);
+  }
+
+  var historyModal = document.getElementById("historyModal");
+  var historyListEl = document.getElementById("historyList");
+  function openHistory() {
+    var arr = loadHistory();
+    if (!arr.length) {
+      historyListEl.innerHTML = '<div class="history-empty">아직 공유(생성)한 콜시트가 없습니다.</div>';
+    } else {
+      historyListEl.innerHTML = "";
+      arr.forEach(function (h) {
+        var row = el("div", "history-item");
+        var info = el("div", "history-info");
+        info.innerHTML = '<div class="history-title">' + esc(h.title || "(제목 없음)") + '</div>' +
+          '<div class="history-sub">' + (h.shootDate ? ("촬영일 " + esc(formatDate(h.shootDate))) : "촬영일 -") + ' · 제작 ' + esc(fmtStamp(h.updatedAt)) + '</div>';
+        info.addEventListener("click", function () { loadFromHistory(h.id, false); });
+        var copyBtn = el("button", "btn btn--sm", "콜시트 복사");
+        copyBtn.addEventListener("click", function (e) { e.stopPropagation(); loadFromHistory(h.id, true); });
+        row.appendChild(info); row.appendChild(copyBtn);
+        historyListEl.appendChild(row);
+      });
+    }
+    historyModal.classList.add("show");
+  }
+  function closeHistory() { historyModal.classList.remove("show"); }
+  function loadFromHistory(id, asCopy) {
+    if (!store.enabled) { toast("히스토리 불러오기는 서버 연결이 필요합니다."); return; }
+    toast("불러오는 중…");
+    store.get(id).then(function (d) {
+      if (!d) { toast("콜시트를 찾을 수 없습니다(삭제됨)."); return; }
+      data = d;
+      if (asCopy) { newSheet(); toast("복사했습니다. 새 콜시트로 편집하세요."); }
+      else { sheetId = id; try { localStorage.setItem(ID_KEY, id); } catch (e) {} toast("불러왔습니다."); }
+      saveNow(); rerender(); closeHistory();
+    }).catch(function (e) { console.error(e); toast("불러오기 실패"); });
+  }
+
+  document.getElementById("btnHistory").addEventListener("click", openHistory);
+  document.getElementById("historyClose").addEventListener("click", closeHistory);
+  historyModal.addEventListener("click", function (e) { if (e.target === historyModal) closeHistory(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeHistory(); });
+  document.getElementById("btnClear").addEventListener("click", function () { if (confirm("모든 내용을 비우고 새로 시작할까요?")) { newSheet(); data = emptyData(); saveNow(); rerender(); } });
 
   renderForm();
 })();
