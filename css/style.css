@@ -1,0 +1,312 @@
+/* =========================================================================
+ * style.css — 콜시트 템플릿 공통 스타일
+ * 모바일 우선(반응형) + 인쇄(A4) 대응
+ * =======================================================================*/
+
+:root {
+  --bg:        #f4f5f7;
+  --panel:     #ffffff;
+  --ink:       #1c2330;
+  --ink-soft:  #5b6472;
+  --line:      #e2e5ea;
+  --brand:     #1f6feb;
+  --brand-ink: #ffffff;
+  --accent:    #ff7a18;
+  --day:       #2563eb;
+  --night:     #6b21a8;
+  --shadow:    0 2px 10px rgba(20,30,50,.06);
+  --radius:    14px;
+  --maxw:      880px;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Malgun Gothic",
+    "맑은 고딕", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+a { color: var(--brand); }
+
+/* ---------- 상단 앱 바 (공유 버튼 등, 인쇄 시 숨김) ---------- */
+.appbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 14px;
+}
+.appbar-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.appbar h1.appbar-title {
+  font-size: 15px;
+  margin: 0;
+  margin-right: auto;
+  font-weight: 700;
+}
+.appbar .muted { color: var(--ink-soft); font-weight: 500; font-size: 13px; }
+
+/* ---------- 버튼 ---------- */
+.btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform .05s ease, background .15s ease, border-color .15s ease;
+  white-space: nowrap;
+}
+.btn:hover { border-color: #c9ced6; }
+.btn:active { transform: translateY(1px); }
+.btn--primary { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
+.btn--primary:hover { background: #185fd0; }
+.btn--accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn--ghost { background: transparent; }
+.btn--sm { padding: 6px 10px; font-size: 13px; border-radius: 8px; }
+.btn:disabled { opacity: .5; cursor: default; }
+
+/* ---------- 페이지 레이아웃 ---------- */
+.page {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 16px 14px 60px;
+}
+
+/* =========================================================================
+ * 콜시트(출력물) 스타일 — .cs-*
+ * =======================================================================*/
+.cs-sheet {
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px 20px 26px;
+  overflow: hidden;
+}
+
+/* 헤더 */
+.cs-head { border-bottom: 2px solid var(--ink); padding-bottom: 14px; margin-bottom: 16px; }
+.cs-orgs { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.cs-org { display: flex; flex-direction: column; gap: 3px; }
+.cs-org--right { text-align: right; align-items: flex-end; }
+.cs-org-tag {
+  font-size: 11px; font-weight: 700; color: var(--brand);
+  background: #eaf1ff; padding: 2px 8px; border-radius: 999px; letter-spacing: .02em;
+}
+.cs-org-name { font-size: 16px; }
+.cs-title { font-size: 24px; font-weight: 800; margin: 6px 0 4px; letter-spacing: -.01em; }
+.cs-period { font-size: 14px; color: var(--ink-soft); font-weight: 600; }
+
+/* 정보 3분할 그리드 */
+.cs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.cs-box {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  background: #fbfcfe;
+}
+.cs-box-h {
+  font-size: 12px; font-weight: 800; color: var(--ink-soft);
+  text-transform: uppercase; letter-spacing: .04em; margin-bottom: 8px;
+}
+.cs-kv { display: flex; align-items: baseline; gap: 6px; font-size: 14px; margin: 3px 0; flex-wrap: wrap; }
+.cs-kv span { color: var(--ink-soft); min-width: 52px; font-size: 12.5px; }
+.cs-kv b { font-weight: 700; }
+.cs-kv i { font-style: normal; color: var(--ink-soft); font-size: 13px; }
+
+.cs-call { display: flex; gap: 6px; align-items: baseline; font-size: 14px; margin: 4px 0; flex-wrap: wrap; }
+.cs-call-label { font-weight: 800; color: var(--brand); min-width: 46px; }
+.cs-call-time { font-weight: 700; }
+.cs-call-place { color: var(--ink-soft); }
+.cs-call--empty { color: var(--ink-soft); }
+
+/* 자료 확인 */
+.cs-materials { margin: 4px 0 14px; }
+.cs-materials-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.cs-material {
+  display: inline-flex; align-items: center; gap: 4px;
+  border: 1px solid var(--line); background: #fff;
+  padding: 7px 12px; border-radius: 999px; font-size: 13px; font-weight: 600;
+  text-decoration: none; color: var(--ink);
+}
+.cs-material--empty { color: var(--ink-soft); border-style: dashed; }
+
+/* 특이사항 */
+.cs-notes {
+  border: 1px solid #ffe0b8; background: #fff8ef;
+  border-radius: 10px; padding: 12px; margin-bottom: 16px;
+}
+.cs-notes p { margin: 0; font-size: 14px; }
+
+/* 날짜별 타임테이블 */
+.cs-days { display: flex; flex-direction: column; gap: 18px; }
+.cs-day-title {
+  font-size: 16px; font-weight: 800; margin: 0 0 8px;
+  padding-left: 10px; border-left: 4px solid var(--brand);
+}
+.cs-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.cs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  min-width: 560px;
+}
+.cs-table th, .cs-table td {
+  border: 1px solid var(--line);
+  padding: 8px 9px;
+  text-align: left;
+  vertical-align: top;
+}
+.cs-table thead th {
+  background: var(--ink);
+  color: #fff;
+  font-weight: 700;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+.cs-table tbody tr:nth-child(even) { background: #f8fafc; }
+
+.cs-c-time  { width: 15%; white-space: nowrap; font-weight: 700; }
+.cs-c-dn    { width: 7%; text-align: center; }
+.cs-c-place { width: 20%; }
+.cs-c-char  { width: 30%; }
+.cs-c-cuts  { width: 8%; text-align: center; }
+.cs-c-etc   { width: 20%; color: var(--ink-soft); }
+
+.cs-dn {
+  display: inline-block; min-width: 22px; text-align: center;
+  font-weight: 800; font-size: 12px; border-radius: 6px; padding: 1px 6px; color: #fff;
+}
+.cs-dn--day   { background: var(--day); }
+.cs-dn--night { background: var(--night); }
+
+.cs-foot {
+  margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--line);
+  font-size: 11.5px; color: var(--ink-soft); text-align: center;
+}
+.cs-empty { color: var(--ink-soft); padding: 20px; text-align: center; }
+
+/* =========================================================================
+ * 반응형 — 모바일
+ * =======================================================================*/
+@media (max-width: 640px) {
+  .cs-grid { grid-template-columns: 1fr; }
+  .cs-title { font-size: 20px; }
+  .cs-sheet { padding: 16px 14px 20px; }
+  .appbar h1.appbar-title { width: 100%; margin-bottom: 4px; }
+}
+
+/* =========================================================================
+ * 인쇄 (A4 세로) — 브라우저 '인쇄 > PDF로 저장'에서 최상의 품질
+ * =======================================================================*/
+@media print {
+  @page { size: A4; margin: 12mm; }
+  html, body { background: #fff; }
+  .appbar, .no-print, .editor-panel { display: none !important; }
+  .page { max-width: none; padding: 0; }
+  .cs-sheet { box-shadow: none; border-radius: 0; padding: 0; }
+  .cs-table-wrap { overflow: visible; }
+  .cs-table { min-width: 0; }
+  .cs-day { break-inside: avoid; }
+  a { color: var(--ink); text-decoration: none; }
+}
+
+/* =========================================================================
+ * 에디터(제작 페이지) 전용
+ * =======================================================================*/
+.editor-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 16px;
+  margin-bottom: 18px;
+}
+.ed-section-title {
+  font-size: 15px; font-weight: 800; margin: 0 0 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.ed-section-title::before {
+  content: ""; width: 4px; height: 16px; background: var(--brand); border-radius: 2px;
+}
+.ed-row { display: grid; gap: 10px; margin-bottom: 12px; }
+.ed-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.ed-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.ed-field { display: flex; flex-direction: column; gap: 4px; }
+.ed-field label { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); }
+.ed-field input, .ed-field textarea, .ed-field select {
+  font: inherit; font-size: 14px;
+  border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px;
+  background: #fff; color: var(--ink); width: 100%;
+}
+.ed-field input:focus, .ed-field textarea:focus {
+  outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(31,111,235,.12);
+}
+.ed-field textarea { min-height: 70px; resize: vertical; }
+.ed-hint { font-size: 12px; color: var(--ink-soft); margin: -4px 0 10px; }
+
+/* 반복 항목 (콜/자료/타임테이블 행) */
+.ed-repeat-item {
+  border: 1px solid var(--line); border-radius: 10px; padding: 10px;
+  margin-bottom: 10px; background: #fbfcfe;
+}
+.ed-repeat-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.ed-repeat-head strong { font-size: 13px; }
+.ed-repeat-head .btn { margin-left: auto; }
+
+/* 에디터 타임테이블 행 — 가로 스크롤 */
+.ed-day { border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin-bottom: 14px; background:#fbfcfe;}
+.ed-day-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.ed-day-head input { max-width: 260px; }
+.ed-tt-wrap { overflow-x: auto; }
+.ed-tt-table { width: 100%; border-collapse: collapse; min-width: 640px; }
+.ed-tt-table th { font-size: 11.5px; color: var(--ink-soft); text-align: left; padding: 4px 6px; font-weight: 700; }
+.ed-tt-table td { padding: 3px 4px; }
+.ed-tt-table input { padding: 7px 8px; font-size: 13.5px; }
+.ed-tt-w-time  { width: 130px; }
+.ed-tt-w-dn    { width: 60px; }
+.ed-tt-w-cuts  { width: 60px; }
+.ed-tt-del { color: #c0392b; border-color: #f0c8c2; }
+
+.ed-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+
+/* 미리보기 라벨 */
+.preview-label {
+  font-size: 12px; font-weight: 800; color: var(--ink-soft);
+  text-transform: uppercase; letter-spacing: .05em; margin: 6px 2px 8px;
+}
+
+/* 토스트 */
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 10px;
+  font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease; z-index: 100; max-width: 90vw; text-align: center;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }

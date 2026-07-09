@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>촬영 콜시트</title>
+  <meta name="description" content="촬영 콜시트">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="appbar no-print">
+    <div class="appbar-inner">
+      <h1 class="appbar-title">📋 촬영 콜시트 <span class="muted">보기</span></h1>
+      <button class="btn btn--sm" id="btnShare">🔗 링크 공유</button>
+      <button class="btn btn--sm" id="btnPng">🖼️ PNG</button>
+      <button class="btn btn--sm" id="btnPdf">📄 PDF</button>
+      <button class="btn btn--sm btn--ghost" id="btnPrint">🖨️ 인쇄</button>
+      <button class="btn btn--sm btn--ghost" id="btnEdit">✏️ 편집</button>
+    </div>
+  </div>
+
+  <main class="page">
+    <div id="mount"></div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/lib/lz-string.min.js"></script>
+  <script src="js/lib/html2canvas.min.js"></script>
+  <script src="js/lib/jspdf.umd.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/viewer.js"></script>
+</body>
+</html>
