@@ -50,6 +50,12 @@ a { color: var(--violet); }
 .appbar-logo { height: 48px; width: auto; max-width: 60vw; object-fit: contain; margin-right: auto; display: block; }
 @media (max-width: 640px) { .appbar-logo { height: 38px; } }
 
+/* 미리보기 팝업 */
+.preview-box { position: relative; width: 94vw; max-width: 940px; height: 90vh; background: #fff; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
+.preview-bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--black); color: #fff; flex: none; }
+.preview-bar-title { font-weight: 800; font-size: 14px; margin-right: auto; }
+.preview-box iframe { flex: 1; width: 100%; border: 0; background: var(--bg); }
+
 /* 히스토리 창 */
 .history-box { max-width: 560px; }
 .history-list { max-height: 60vh; overflow-y: auto; margin-top: 4px; }

@@ -223,7 +223,7 @@
       box.appendChild(r2);
       body.appendChild(box);
     });
-    var add = el("button", "btn btn--sm btn--violet", "＋ 콜 추가");
+    var add = el("button", "btn btn--sm btn--violet", "＋ 추가");
     add.addEventListener("click", function () { arr.push({ name: "", character: "", time: "", place: "", prep: "" }); save(); rerender(); });
     body.appendChild(add);
     acc.appendChild(body);
@@ -300,7 +300,7 @@
       tr.appendChild(cell(r.time, "time", "10:00~12:00"));
       tr.appendChild(cell(r.dn, "dn", "D/N"));
       tr.appendChild(cell(r.ie, "ie", "I/E"));
-      tr.appendChild(cell(r.place, "place", "장소/씬 (넓게)"));
+      tr.appendChild(cell(r.place, "place", "장소/씬"));
       tr.appendChild(cell(r.character, "character", "배역"));
       tr.appendChild(cell(r.cuts, "cuts", "컷"));
       tr.appendChild(cell(r.etc, "etc", "비고"));
@@ -326,8 +326,18 @@
     return box;
   }
 
-  /* ---------- 미리보기 / 공유 ---------- */
-  function openPreview() { saveNow(); window.open(buildShareUrl(data), "_blank"); }
+  /* ---------- 미리보기 (앱 안 팝업) ---------- */
+  var previewModal = document.getElementById("previewModal");
+  var previewFrame = document.getElementById("previewFrame");
+  function openPreview() {
+    saveNow();
+    previewFrame.src = buildShareUrl(data); // #d= 방식이라 서버 없이 즉시 미리보기
+    previewModal.classList.add("show");
+  }
+  function closePreview() { previewModal.classList.remove("show"); previewFrame.src = "about:blank"; }
+  document.getElementById("previewClose").addEventListener("click", closePreview);
+  previewModal.addEventListener("click", function (e) { if (e.target === previewModal) closePreview(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closePreview(); });
 
   var shareModal = document.getElementById("shareModal");
   var shareUrlEl = document.getElementById("shareUrl");
