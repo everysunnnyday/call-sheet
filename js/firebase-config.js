@@ -10,10 +10,11 @@
  * ※ 아직 안 채우면(=PASTE 상태) 앱은 자동으로 "링크에 데이터 담기" 방식으로 작동합니다.
  * =======================================================================*/
 window.FIREBASE_CONFIG = {
-  apiKey: "PASTE_API_KEY",
-  authDomain: "PASTE_PROJECT.firebaseapp.com",
-  projectId: "PASTE_PROJECT_ID",
-  storageBucket: "PASTE_PROJECT.appspot.com",
-  messagingSenderId: "PASTE_SENDER_ID",
-  appId: "PASTE_APP_ID"
+  apiKey: "AIzaSyA9_TztIUUlAxglzefAPPLRTJIqYm3Wo3g",
+  authDomain: "call-sheet-2c737.firebaseapp.com",
+  projectId: "call-sheet-2c737",
+  storageBucket: "call-sheet-2c737.firebasestorage.app",
+  messagingSenderId: "297440179024",
+  appId: "1:297440179024:web:5df702fdaa0cde1ca63255",
+  measurementId: "G-HDDRZTL23V"
 };
