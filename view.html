@@ -5,23 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>촬영 콜시트</title>
   <meta name="description" content="촬영 콜시트">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="appbar no-print">
     <div class="appbar-inner">
       <h1 class="appbar-title">📋 촬영 콜시트 <span class="muted">보기</span></h1>
-      <button class="btn btn--sm" id="btnShare">🔗 링크 공유</button>
-      <button class="btn btn--sm" id="btnPng">🖼️ PNG</button>
-      <button class="btn btn--sm" id="btnPdf">📄 PDF</button>
+      <button class="btn btn--sm btn--ghost" id="btnShare">🔗 링크</button>
+      <button class="btn btn--sm btn--ghost" id="btnPng">🖼️ PNG</button>
+      <button class="btn btn--sm btn--ghost" id="btnPdf">📄 PDF</button>
       <button class="btn btn--sm btn--ghost" id="btnPrint">🖨️ 인쇄</button>
-      <button class="btn btn--sm btn--ghost" id="btnEdit">✏️ 편집</button>
+      <button class="btn btn--sm btn--primary" id="btnEdit">✏️ 편집</button>
     </div>
   </div>
 
   <main class="page">
     <div id="mount"></div>
   </main>
+
+  <!-- 이미지 팝업 -->
+  <div class="cs-lightbox" id="lightbox">
+    <button class="cs-lightbox-close" id="lightbox-close" aria-label="닫기">✕</button>
+    <img id="lightbox-img" src="" alt="">
+  </div>
 
   <div class="toast" id="toast"></div>
 
