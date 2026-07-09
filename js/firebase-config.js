@@ -22,4 +22,4 @@ window.FIREBASE_CONFIG = {
 /* 카톡 미리보기에 촬영명 표시용 Cloudflare Worker 주소.
  * 비워두면 기존처럼 view.html?id=... 로 공유됨.
  * Worker 배포 후 주소(예: https://call-sheet-og.xxxx.workers.dev)를 여기에 넣으면 켜짐. */
-window.SHARE_BASE = "";
+window.SHARE_BASE = "https://call-sheet-og.sun0873.workers.dev";
