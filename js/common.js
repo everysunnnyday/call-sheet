@@ -158,7 +158,11 @@ function migrate(d) {
 }
 function baseUrl() { return location.href.replace(/\/[^\/]*(\?[^#]*)?(#.*)?$/, "/"); }
 function buildShareUrl(data) { return baseUrl() + "view.html#d=" + encodeData(data); }
-function buildIdUrl(id) { return baseUrl() + "view.html?id=" + id; }
+function buildIdUrl(id) {
+  // SHARE_BASE(Cloudflare Worker)가 설정돼 있으면 그쪽을 거쳐 공유(카톡 미리보기에 촬영명 표시)
+  if (window.SHARE_BASE) return String(window.SHARE_BASE).replace(/\/+$/, "") + "/" + id;
+  return baseUrl() + "view.html?id=" + id;
+}
 
 /* ---------- 유틸 ---------- */
 function escapeHtml(s) {

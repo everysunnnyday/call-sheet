@@ -43,12 +43,12 @@ a { color: var(--violet); }
 .appbar-inner {
   max-width: var(--maxw); margin: 0 auto;
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  padding: 10px 14px;
+  padding: 14px 14px;
 }
 .appbar h1.appbar-title { font-size: 15px; margin: 0; margin-right: auto; font-weight: 800; color: #fff; }
 .appbar .muted { color: var(--lime); font-weight: 700; font-size: 12px; }
-.appbar-logo { height: 26px; width: auto; margin-right: auto; display: block; }
-@media (max-width: 640px) { .appbar-logo { height: 22px; } }
+.appbar-logo { height: 48px; width: auto; max-width: 60vw; object-fit: contain; margin-right: auto; display: block; }
+@media (max-width: 640px) { .appbar-logo { height: 38px; } }
 
 /* 히스토리 창 */
 .history-box { max-width: 560px; }
